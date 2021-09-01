@@ -43,8 +43,9 @@ def printMenu():
     print("5- Consultar las obras por la nacionalidad de sus creadores")
     print("6- Calcular el costo para transportar todas las obras de un departamento del MoMA")
     print("7- Consultar la nueva idea de exposición del museo según la disponibilidad del área del MoMA")
+    print("0- Salir")
+    
 
-#catalog = None
 
 def initCatalog():
     """
@@ -58,7 +59,26 @@ def loadData(catalog):
     """
     controller.loadData(catalog)
 
-    
+def printUltimosTresArtistas(artista):
+    size = lt.size(artista)
+    if size:
+        print(' Estos son los ultimos tres artistas: ')
+        for artistas in lt.iterator(artista):
+            print('Nombre: ' + artista['DisplayName'])
+    else:
+        print('No se encontraron los artistas')    
+
+def printUltimosTresObras(obra):
+    size = lt.size(obra)
+    if size:
+        print(' Estos son los ultimos tres obra: ')
+        for obras in lt.iterator(obra):
+            print('Nombre: ' + obra['DisplayName'])
+    else:
+        print('No se encontraron libros')            
+
+catalog = None
+
 """
 Menu principal
 """
@@ -68,8 +88,20 @@ while True:
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
 
+        catalog = initCatalog()
+        loadData(catalog)
+        print('Artistas cargados: ' + str(lt.size(catalog['artistas'])))
+        print('Obras Cargadas: ' + str(lt.size(catalog['obras'])))
+       
+
     elif int(inputs[0]) == 2:
-        pass
+        number = input("ultimos 3 artistas: ")
+        artistas = controller.getUltimosTresArtistas(catalog)
+        printUltimosTresArtistas(artistas)
+
+        number = input("ultimos 3 obras: ")
+        obras = controller.getUltimosTresObra(catalog)
+        printUltimosTresObras(obras)
 
     else:
         sys.exit(0)

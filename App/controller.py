@@ -41,8 +41,9 @@ def loadData(catalog):
     """
     Cargar los datos de los archivos y cargar los datos en la estructura de datos
     """
-    loadArtists(catalog)
     loadArtworks(catalog)
+    loadArtists(catalog)
+    
 
 def loadArtists(catalog):
     """
@@ -51,7 +52,7 @@ def loadArtists(catalog):
     artistsfile = cf.data_dir + 'Artists-utf8-small.csv'
     input_file = csv.DictReader(open(artistsfile,encoding= 'utf-8'))
     for artists in input_file:
-        model.addArtists(catalog,artists)
+        model.addArtista(catalog,artists)
 
 def loadArtworks(catalog):
     """
@@ -60,8 +61,19 @@ def loadArtworks(catalog):
     artworksfile = cf.data_dir + 'Artworks-utf8-small.csv'
     input_file = csv.DictReader(open(artworksfile,encoding= 'utf-8'))
     for artworks in input_file:
-        model.addArtworks(catalog,artworks)
+        model.addObra(catalog,artworks)
 
 # Funciones de ordenamiento
 
 # Funciones de consulta sobre el catálogo
+
+def getUltimosTresObra(catalog):
+
+    ultimastres= model.getUltimosTresObra(catalog)
+    return ultimastres
+
+
+def getUltimosTresArtistas(catalog):
+
+    ultimastres= model.getUltimosTresArtistas(catalog)
+    return ultimastres
