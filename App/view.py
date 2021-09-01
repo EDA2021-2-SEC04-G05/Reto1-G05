@@ -37,10 +37,28 @@ operación solicitada
 def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
-    print("2- ")
+    print("2- Consultar la lista cronológica de los artistas")
+    print("3- Consultar las obras adquiridas en el museo")
+    print("4- Consultar las obras de un artista por técnica")
+    print("5- Consultar las obras por la nacionalidad de sus creadores")
+    print("6- Calcular el costo para transportar todas las obras de un departamento del MoMA")
+    print("7- Consultar la nueva idea de exposición del museo según la disponibilidad del área del MoMA")
 
-catalog = None
+#catalog = None
 
+def initCatalog():
+    """
+    Inicializa el catálogo del museo
+    """
+    return controller.initCatalog()
+
+def loadData(catalog):
+    """
+    Carga el museo en la estructura de datos
+    """
+    controller.loadData(catalog)
+
+    
 """
 Menu principal
 """

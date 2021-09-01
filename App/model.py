@@ -37,6 +37,12 @@ los mismos.
 
 # Construccion de modelos
 
+def newCatalog():
+    """
+    """
+    catalog = {
+        
+    }
 # Funciones para agregar informacion al catalogo
 
 # Funciones para creacion de datos
