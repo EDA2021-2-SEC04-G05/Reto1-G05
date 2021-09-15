@@ -20,7 +20,7 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
-from App.model import estructuradatos
+from App.model import estructuradatos, tipoSorter
 import config as cf
 import model
 import csv
@@ -83,4 +83,8 @@ def getUltimosTresArtistas(catalog):
 def getTamañoSubLista(catalog,valor):
     tamaño = model.tamañoMuestra(catalog, valor)
     return tamaño 
+
+def getSorter(catalog,sort):
+   ordenamiento = model.tipoSorter(catalog,sort)
+   return ordenamiento
     

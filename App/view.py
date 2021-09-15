@@ -104,7 +104,9 @@ while True:
     elif int(inputs[0]) == 3:
         valor = int(input('Ingrese el tamaño de la lista que quiere crear:'))
         number = input("ultimos 3 obras: ")
-        obras = controller.getUltimasTresObra(catalog)
+        sort=input("selecciones el ordenanimento que quiere: 0= Insercionsort, 1= shellsort, 2= quicksort")
+        ordenamiento=controller.getSorter(catalog,sort)
+        obras = controller.getUltimosTresObra(catalog)
         tamaño = controller.getTamañoSubLista(catalog,valor)
         printUltimosTresObras(obras) 
 

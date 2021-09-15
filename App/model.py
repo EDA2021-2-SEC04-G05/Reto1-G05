@@ -212,28 +212,105 @@ def cmpArtworkByDateAcquired(artwork1,artwork2):
 
 
 # Funciones de ordenamiento
-def ordenarfechaobras(catalog, cmpArtworkByDateAcquired):
-    size = lt.size(catalog['obras'])
-    pos1 = 1
-    while pos1 <= size:
-        pos2 = pos1
-        while (pos2 > 1) and (cmpArtworkByDateAcquired(lt.getElement(catalog['obras'], pos2), lt.getElement(catalog['obras'], pos2-1))):
-            lt.exchange(catalog['obras'], pos2, pos2-1)
-            pos2 -= 1
-        pos1 += 1
-    return catalog 
 
-def insertionsort(lst, cmpfunction):
+
+def tipoSorter(opciones,lst):
+    if opciones == 0:
+        return insertionsort(lst)
+    elif opciones == 1:
+        return shellsort(lst)
+    elif opciones == 2:
+        return quicksortsort(lst)
+    else:
+     print ("error")
+      
+
+
+def insertionsort(lst):
     size = lt.size(lst)
     pos1 = 1
     while pos1 <= size:
         pos2 = pos1
-        while (pos2 > 1) and (cmpfunction(
+        while (pos2 > 1) and (cmpArtworkByDateAcquired(
                lt.getElement(lst, pos2), lt.getElement(lst, pos2-1))):
             lt.exchange(lst, pos2, pos2-1)
             pos2 -= 1
         pos1 += 1
     return lst
+
+
+def shellsort(lst):
+    n = lt.size(lst)
+    h = 1
+    while h < n/3:   # primer gap. La lista se h-ordena con este tamaño
+        h = 3*h + 1
+    while (h >= 1):
+        for i in range(h, n):
+            j = i
+            while (j >= h) and cmpArtworkByDateAcquired(
+                                lt.getElement(lst, j+1),
+                                lt.getElement(lst, j-h+1)):
+                lt.exchange(lst, j+1, j-h+1)
+                j -= h
+        h //= 3    # h se decrementa en un tercio
+    return lst
+
+
+
+def partition(lst, lo, hi, cmpfunction):
+    """
+    Función que va dejando el pivot en su lugar, mientras mueve
+    elementos menores a la izquierda del pivot y elementos mayores a
+    la derecha del pivot
+    """
+    follower = leader = lo
+    while leader < hi:
+        if cmpfunction(
+           lt.getElement(lst, leader), lt.getElement(lst, hi)):
+            lt.exchange(lst, follower, leader)
+            follower += 1
+        leader += 1
+    lt.exchange(lst, follower, hi)
+    return follower
+
+
+def quicksort(lst, lo, hi, cmpfunction):
+    """
+    Se localiza el pivot, utilizando la funcion de particion.
+    Luego se hace la recursión con los elementos a la izquierda del pivot
+    y los elementos a la derecha del pivot
+    """
+    if (lo >= hi):
+        return
+    pivot = partition(lst, lo, hi, cmpfunction)
+    quicksort(lst, lo, pivot-1, cmpfunction)
+    quicksort(lst, pivot+1, hi, cmpfunction)
+
+
+def quicksortsort(lst):
+    quicksort(lst, 1, lt.size(lst),cmpArtworkByDateAcquired)
+    return lst
+
+
+
+
+
+
+
+
+
+def InserecionOrdenarfechaobras(catalog):
+    size = lt.size(catalog['obras'])
+    pos1 = 1
+    while pos1 <= size:
+        pos2 = pos1                                                   
+        while (pos2 > 1) and (cmpArtworkByDateAcquired (lt.getElement(catalog['obras'], pos2), lt.getElement(catalog['obras'], pos2-1))):
+            lt.exchange(catalog['obras'], pos2, pos2-1)
+            pos2 -= 1
+        pos1 += 1
+    return catalog 
+
+
 
 def selectionsort(lst, cmpfunction):
     size = lt.size(lst)
@@ -249,21 +326,4 @@ def selectionsort(lst, cmpfunction):
         lt.exchange(lst, pos1, minimum)  # elemento más pequeño -> elem pos1
         pos1 += 1
     return lst
-
-def shellsort(lst, cmpfunction):
-    n = lt.size(lst)
-    h = 1
-    while h < n/3:   # primer gap. La lista se h-ordena con este tamaño
-        h = 3*h + 1
-    while (h >= 1):
-        for i in range(h, n):
-            j = i
-            while (j >= h) and cmpfunction(
-                                lt.getElement(lst, j+1),
-                                lt.getElement(lst, j-h+1)):
-                lt.exchange(lst, j+1, j-h+1)
-                j -= h
-        h //= 3    # h se decrementa en un tercio
-    return lst
-
 
