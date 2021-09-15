@@ -104,7 +104,7 @@ while True:
     elif int(inputs[0]) == 3:
         valor = int(input('Ingrese el tamaño de la lista que quiere crear:'))
         number = input("ultimos 3 obras: ")
-        obras = controller.getUltimosTresObra(catalog)
+        obras = controller.getUltimasTresObra(catalog)
         tamaño = controller.getTamañoSubLista(catalog,valor)
         printUltimosTresObras(obras) 
 
