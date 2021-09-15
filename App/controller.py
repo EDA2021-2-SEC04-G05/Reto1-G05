@@ -20,6 +20,7 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+from App.model import estructuradatos
 import config as cf
 import model
 import csv
@@ -30,11 +31,12 @@ El controlador se encarga de mediar entre la vista y el modelo.
 """
 
 # Inicialización del Catálogo de libros
-def initCatalog():
+def initCatalog(opciones):
     """
     """
+    model.estructuradatos(opciones)
     catalog = model.newCatalog()
-    return catalog 
+    return catalog
 
 # Funciones para la carga de datos
 def loadData(catalog):
@@ -77,3 +79,8 @@ def getUltimosTresArtistas(catalog):
 
     ultimastres= model.getUltimosTresArtistas(catalog)
     return ultimastres
+
+def getTamañoSubLista(catalog,valor):
+    tamaño = model.tamañoMuestra(catalog, valor)
+    return tamaño 
+    

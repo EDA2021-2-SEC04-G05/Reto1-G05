@@ -37,7 +37,14 @@ los mismos.
 
 # Construccion de modelos
 
-def newCatalog():
+def estructuradatos(opciones):
+    if opciones == 1:
+        temp = 'SINGLE_LINKED'
+    else:
+        temp = 'ARRAY_LIST'
+    return temp 
+
+def newCatalog(): 
     """
     Inicializa el catálogo de libros. Crea una lista vacia para guardar
     todos los libros, adicionalmente, crea una lista vacia para los autores,
@@ -47,13 +54,13 @@ def newCatalog():
     catalog = {'artistas': None,
                'obras': None}
 
-    catalog['artistas'] = lt.newList('SINGLE_LINKED')
-    catalog['obras'] = lt.newList('SINGLE_LINKED')
+    catalog['artistas'] = lt.newList(estructuradatos,cmpfunction=compareartistas)
+    catalog['obras'] = lt.newList(estructuradatos)
     
     return catalog
 
 # Funciones para agregar informacion al catalogo
-def addArtista(catalog, artistaName, obra):
+def addArtista(catalog, artistaName):
     """
     Adiciona un autor a lista de autores, la cual guarda referencias
     a los libros de dicho autor
@@ -63,16 +70,15 @@ def addArtista(catalog, artistaName, obra):
     if posartista > 0:
         artista = lt.getElement(artistas, posartista)
     else:
-        artista = newArtista(artistaName)
+        artista = newArtista(artistaName['ConstituentID'],artistaName['DisplayName'], artistaName["ArtistBio"], artistaName["Nationality"], artistaName["Gender"],artistaName["BeginDate"], artistaName["EndDate"],artistaName["Wiki_QID"],artistaName["ULAN"])
         lt.addLast(artistas, artista)
-    lt.addLast(artista['obra'], obra)
-
+    
 
 def addObra(catalog, obra):
     # Se adiciona el libro a la lista de libros
     lt.addLast(catalog['obras'], obra)
     # Se obtienen los autores del libro
-    authors = obra['DisplayName'].split(",")
+    authors = obra['ConstituentID']
     # Cada autor, se crea en la lista de libros del catalogo, y se
     # crea un libro en la lista de dicho autor (apuntador al libro)
     for author in authors:
@@ -80,24 +86,45 @@ def addObra(catalog, obra):
 
 # Funciones para creacion de datos
 
-def newArtista(name,artistaID):
+def newArtista(name,gender,beginDate,nationality,endDate,id,artistbio,wiki,ulan):
     """
     Crea una nueva estructura para modelar los libros de
     un autor y su promedio de ratings
     """
-    artista = {'DisplayName': "", 'ConstituentID': None ,"obra": None, }
+    artista = {'ConstituentID': "", 'DisplayName': "", "ArtistBio": "" , "Nationality": "", "Gender": "","BeginDate": ""  , "EndDate" : "", "Wiki_QID": "", "ULAN": "" }
     artista['DisplayName'] = name
-    artista ['obra'] = lt.newList('SINGLE_LINKED')
+    artista['Gender'] = gender
+    artista['BeginDate'] = beginDate
+    artista['Nationality'] = nationality
+    artista['EndDate'] = endDate
+    artista['ConstituentID'] = id
+    artista['ArtistBio'] = artistbio
+    artista['Wiki_QID'] = wiki 
+    artista['ULAN'] = ulan 
+    artista ['obra'] = lt.newList('ARRAY_LIST')
     return artista
 
-def newObra(name , obraID, artistaID):
+def newObra(title, date,medium,dimensions,creditline,accessionnumber, classification, department, dateAcquired, cataloge, objectID, url, diameter, circunference, depth):
     """
     Crea una nueva estructura para modelar los libros de
     un autor y su promedio de ratings
     """
-    obra = {'title': "", "ObjectID": None, 'ConstituentID': None }
-    obra['title'] = name
-    obra['ObjectID'] = obraID
+    obra = {"ObjectID": "",'Title': "", "ConstituentID": "", "Date" : "", "Medium" : "", "Dimensions" : "", "CreditLine" : "", "AccessionNumber" : "", "Classification" : "", "Department": "", "DateAcquired" : "", "Cataloge": "", "URL" : ""}
+    obra['Title'] = title
+    obra['Date'] = date
+    obra['Medium'] = medium
+    obra['Dimensions'] = dimensions
+    obra['CreditLine'] = creditline
+    obra['Department'] = department
+    obra['DateAcquired'] = dateAcquired
+    obra['ObjectID'] = objectID
+    obra['Diameter'] = diameter
+    obra['Circunference'] = circunference
+    obra['Depth'] = depth 
+    obra['AccessionNumber'] = accessionnumber
+    obra['Classification'] = classification 
+    obra['Cataloge'] = cataloge
+    obra['URL'] = url 
     return obra    
 
 # Funciones de consulta
@@ -141,8 +168,102 @@ def getUltimosTresObra(catalog):
         lt.addFirst(ultimostres, obra)
     return ultimostres
 
+def tamañoMuestra(catalog,valor):
+    tamaño = lt.size(catalog['obra'])
+    if valor > tamaño:
+        print('Error')
+    else:
+        return valor 
+        
+def subListObras(catalog, pos):
+    """ Retorna una sublista de la lista lst.
 
+    Se retorna una lista que contiene los elementos a partir de la
+    posicion pos, con una longitud de numelem elementos.
+    Se crea una copia de dichos elementos y se retorna una lista nueva.
 
+    Args:
+        lst: La lista a examinar
+        pos: Posición a partir de la que se desea obtener la sublista
+        numelem: Numero de elementos a copiar en la sublista
+
+    Raises:
+        Exception
+    """
+    return lt.subList(catalog['obra'],pos,tamañoMuestra)
+  
 # Funciones utilizadas para comparar elementos dentro de una lista
+def compareartistas(artistaname1, artista):
+    if (artistaname1.lower() in artista['name'].lower()):
+        return 0
+    return -1
+
+def cmpArtworkByDateAcquired(artwork1,artwork2):
+    """
+    Devuelve verdadero (True) si el DateAcquired de artwork1 < artwork2
+        Args: 
+        Artwork1: informacion de la primera obra de DateAcquired
+        Artwork2: informacion de la segunda obra de DateAcquired
+    """
+    respuesta = False 
+    if artwork1['DateAcquired'] < artwork2['DateAcquired']:
+        respuesta = True 
+    return respuesta
+
 
 # Funciones de ordenamiento
+def ordenarfechaobras(catalog, cmpArtworkByDateAcquired):
+    size = lt.size(catalog['obras'])
+    pos1 = 1
+    while pos1 <= size:
+        pos2 = pos1
+        while (pos2 > 1) and (cmpArtworkByDateAcquired(lt.getElement(catalog['obras'], pos2), lt.getElement(catalog['obras'], pos2-1))):
+            lt.exchange(catalog['obras'], pos2, pos2-1)
+            pos2 -= 1
+        pos1 += 1
+    return catalog 
+
+def insertionsort(lst, cmpfunction):
+    size = lt.size(lst)
+    pos1 = 1
+    while pos1 <= size:
+        pos2 = pos1
+        while (pos2 > 1) and (cmpfunction(
+               lt.getElement(lst, pos2), lt.getElement(lst, pos2-1))):
+            lt.exchange(lst, pos2, pos2-1)
+            pos2 -= 1
+        pos1 += 1
+    return lst
+
+def selectionsort(lst, cmpfunction):
+    size = lt.size(lst)
+    pos1 = 1
+    while pos1 < size:
+        minimum = pos1    # minimun tiene el menor elemento
+        pos2 = pos1 + 1
+        while (pos2 <= size):
+            if (cmpfunction(lt.getElement(lst, pos2),
+               (lt.getElement(lst, minimum)))):
+                minimum = pos2  # minimum = posición elemento más pequeño
+            pos2 += 1
+        lt.exchange(lst, pos1, minimum)  # elemento más pequeño -> elem pos1
+        pos1 += 1
+    return lst
+
+def shellsort(lst, cmpfunction):
+    n = lt.size(lst)
+    h = 1
+    while h < n/3:   # primer gap. La lista se h-ordena con este tamaño
+        h = 3*h + 1
+    while (h >= 1):
+        for i in range(h, n):
+            j = i
+            while (j >= h) and cmpfunction(
+                                lt.getElement(lst, j+1),
+                                lt.getElement(lst, j-h+1)):
+                lt.exchange(lst, j+1, j-h+1)
+                j -= h
+        h //= 3    # h se decrementa en un tercio
+    return lst
+
+

@@ -48,11 +48,11 @@ def printMenu():
     
 
 
-def initCatalog():
+def initCatalog(opciones):
     """
     Inicializa el catálogo del museo
     """
-    return controller.initCatalog()
+    return controller.initCatalog(opciones)
 
 def loadData(catalog):
     """
@@ -88,21 +88,45 @@ while True:
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
+        opciones = int(input('De que forma desea cargar el catalogo:'))
+    
+        catalog = initCatalog(opciones)
+        loadData(catalog) 
 
-        catalog = initCatalog()
-        loadData(catalog)
         print('Artistas cargados: ' + str(lt.size(catalog['artistas'])))
         print('Obras Cargadas: ' + str(lt.size(catalog['obras'])))
-       
 
     elif int(inputs[0]) == 2:
         number = input("ultimos 3 artistas: ")
         artistas = controller.getUltimosTresArtistas(catalog)
         printUltimosTresArtistas(artistas)
 
+    elif int(inputs[0]) == 3:
+        valor = int(input('Ingrese el tamaño de la lista que quiere crear:'))
         number = input("ultimos 3 obras: ")
         obras = controller.getUltimosTresObra(catalog)
+        tamaño = controller.getTamañoSubLista(catalog,valor)
+        printUltimosTresObras(obras) 
+
+    elif int(inputs[0]) == 4:
+        number = input("obras por tecnica de artista: ")
+        artistas = controller.getUltimosTresObra(catalog)
+        printUltimosTresObras(obras) 
+
+    elif int(inputs[0]) == 5:
+        number = input("obra por nacionalidad artista: ")
+        obras = controller.getUltimosTresObra(catalog)
         printUltimosTresObras(obras)
+
+    elif int(inputs[0]) == 6:
+        number = input("costo transportar obras: ")
+        artistas = controller.getUltimosTresArtistas(catalog)
+        printUltimosTresArtistas(artistas)
+
+    elif int(inputs[0]) == 7:
+        number = input("nueva exposicion: ")
+        artistas = controller.getUltimosTresArtistas(catalog)
+        printUltimosTresArtistas(artistas)
 
     else:
         sys.exit(0)
