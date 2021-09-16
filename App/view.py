@@ -27,6 +27,8 @@ import controller
 from DISClib.ADT import list as lt
 assert cf
 
+defauly_limit=1000
+sys.setrecursionlimit(defauly_limit*100)
 
 """
 La vista se encarga de la interacción con el usuario
@@ -76,7 +78,17 @@ def printUltimosTresObras(obra):
         for obras in lt.iterator(obra):
             print('Nombre: ' + obra['DisplayName'])
     else:
-        print('No se encontraron libros')            
+        print('No se encontraron libros')      
+
+def printSortResults(sort_obra, sample=10):
+    size= lt.size(sort_obra)
+    if size > sample:
+     print("los primeros ", sample, "las primeras obras son:")
+     i=1
+     while i <= sample:
+         obras= lt.getElement(sort_obra,i)
+         print('Titulo:' + obras['title']+' Artistas:'+ obras['']+ ' Fecha:'+ obras['Date_Acquired'] + 'Medio:' + obras['Medium'] + 'Dimensiones:'+ obras[''])
+         i+=1    
 
 catalog = None
 
@@ -129,6 +141,7 @@ while True:
         number = input("nueva exposicion: ")
         artistas = controller.getUltimosTresArtistas(catalog)
         printUltimosTresArtistas(artistas)
+
 
     else:
         sys.exit(0)

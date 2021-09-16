@@ -26,6 +26,7 @@
 
 
 import config as cf
+import time 
 from DISClib.ADT import list as lt
 from DISClib.Algorithms.Sorting import shellsort as sa
 assert cf
@@ -72,7 +73,7 @@ def addArtista(catalog, artistaName):
     else:
         artista = newArtista(artistaName['ConstituentID'],artistaName['DisplayName'], artistaName["ArtistBio"], artistaName["Nationality"], artistaName["Gender"],artistaName["BeginDate"], artistaName["EndDate"],artistaName["Wiki_QID"],artistaName["ULAN"])
         lt.addLast(artistas, artista)
-    
+
 
 def addObra(catalog, obra):
     # Se adiciona el libro a la lista de libros
@@ -104,14 +105,15 @@ def newArtista(name,gender,beginDate,nationality,endDate,id,artistbio,wiki,ulan)
     artista ['obra'] = lt.newList('ARRAY_LIST')
     return artista
 
-def newObra(title, date,medium,dimensions,creditline,accessionnumber, classification, department, dateAcquired, cataloge, objectID, url, diameter, circunference, depth):
+def newObra(objectID,title,constituentID, date,medium,dimensions,creditline,accessionnumber, classification, department, dateAcquired, cataloge, url, diameter, circunference, depth):
     """
     Crea una nueva estructura para modelar los libros de
     un autor y su promedio de ratings
     """
-    obra = {"ObjectID": "",'Title': "", "ConstituentID": "", "Date" : "", "Medium" : "", "Dimensions" : "", "CreditLine" : "", "AccessionNumber" : "", "Classification" : "", "Department": "", "DateAcquired" : "", "Cataloge": "", "URL" : ""}
+    obra = {"ObjectID": "",'Title': "", "ConstituentID": "", "Date" : "", "Medium" : "", "Dimensions" : "", "CreditLine" : "", "AccessionNumber" : "", "Classification" : "", "Department": "", "DateAcquired" : "", "Cataloge": "", "URL" : ""} 
     obra['Title'] = title
     obra['Date'] = date
+    obra['ConstituentID'] = constituentID
     obra['Medium'] = medium
     obra['Dimensions'] = dimensions
     obra['CreditLine'] = creditline
@@ -125,7 +127,9 @@ def newObra(title, date,medium,dimensions,creditline,accessionnumber, classifica
     obra['Classification'] = classification 
     obra['Cataloge'] = cataloge
     obra['URL'] = url 
-    return obra    
+    obra['artista'] = lt.newList('ARRAY_LIST')
+    return obra   
+ 
 
 # Funciones de consulta
 
@@ -210,6 +214,9 @@ def cmpArtworkByDateAcquired(artwork1,artwork2):
         respuesta = True 
     return respuesta
 
+def cmpConstituentID(catalog):
+    if catalog['artista']['ConstituentID'] == catalog['obra']['ConstituentID']:
+
 
 # Funciones de ordenamiento
 
@@ -292,13 +299,6 @@ def quicksortsort(lst):
     return lst
 
 
-
-
-
-
-
-
-
 def InserecionOrdenarfechaobras(catalog):
     size = lt.size(catalog['obras'])
     pos1 = 1
@@ -327,3 +327,56 @@ def selectionsort(lst, cmpfunction):
         pos1 += 1
     return lst
 
+
+def Mergesort(catalog, cmpfunction = ):
+    size = lt.size(lst)
+    if size > 1:
+        mid = (size // 2)
+        """se divide la lista original, en dos partes, izquierda y derecha,
+        desde el punto mid."""
+        leftlist = lt.subList(lst, 1, mid)
+        rightlist = lt.subList(lst, mid+1, size - mid)
+
+        """se hace el llamado recursivo con la lista izquierda y derecha"""
+        sort(leftlist, cmpfunction)
+        sort(rightlist, cmpfunction)
+
+        """i recorre la lista izquierda, j la derecha y k la lista original"""
+        i = j = k = 1
+
+        leftelements = lt.size(leftlist)
+        rightelements = lt.size(rightlist)
+
+        while (i <= leftelements) and (j <= rightelements):
+            elemi = lt.getElement(leftlist, i)
+            elemj = lt.getElement(rightlist, j)
+            """compara y ordena los elementos"""
+            if cmpfunction(elemj, elemi):   # caso estricto elemj < elemi
+                lt.changeInfo(lst, k, elemj)
+                j += 1
+            else:                            # caso elemi <= elemj
+                lt.changeInfo(lst, k, elemi)
+                i += 1
+            k += 1
+
+        """Agrega los elementos que no se comprararon y estan ordenados"""
+        while i <= leftelements:
+            lt.changeInfo(lst, k, lt.getElement(leftlist, i))
+            i += 1
+            k += 1
+
+        while j <= rightelements:
+            lt.changeInfo(lst, k, lt.getElement(rightlist, j))
+            j += 1
+            k += 1
+    return lst
+
+# funcion de ordenamiento - tiempo 
+def sortObras(catalog,opcion):
+    sub_list = lt.subList(catalog['obras'], 1, lt.size(catalog['obras']))
+    sub_list = sub_list.copy()
+    start_time = time.process_time()
+    sorted_list=tipoSorter(opcion, sub_list)
+    stop_time = time.process_time()
+    elapsed_time_mseg = (stop_time - start_time)*1000
+    return elapsed_time_mseg,sorted_list
