@@ -71,19 +71,19 @@ def addArtista(catalog, artistaName):
     if posartista > 0:
         artista = lt.getElement(artistas, posartista)
     else:
-        artista = newArtista(artistaName['ConstituentID'],artistaName['DisplayName'], artistaName["ArtistBio"], artistaName["Nationality"], artistaName["Gender"],artistaName["BeginDate"], artistaName["EndDate"],artistaName["Wiki_QID"],artistaName["ULAN"])
+        artista = newArtista(artistaName["ConstituentID"],artistaName["DisplayName"], artistaName["ArtistBio"], artistaName["Nationality"], artistaName["Gender"],artistaName["BeginDate"], artistaName["EndDate"],artistaName["Wiki_QID"],artistaName["ULAN"])
         lt.addLast(artistas, artista)
 
 
-def addObra(catalog, obra):
-    # Se adiciona el libro a la lista de libros
-    lt.addLast(catalog['obras'], obra)
-    # Se obtienen los autores del libro
-    authors = obra['ConstituentID']
-    # Cada autor, se crea en la lista de libros del catalogo, y se
-    # crea un libro en la lista de dicho autor (apuntador al libro)
-    for author in authors:
-        addArtista(catalog, author.strip(), obra)
+def addObra(catalog, obraName):
+    
+    obras = catalog['obras']
+    posobra = lt.isPresent(obras, obraName)
+    if posobra > 0:
+        obra = lt.getElement(obras, posobra)
+    else:
+        obra = newObra(obraName["ObjectID"],obraName["Title"],obraName["ConstituentID"],obraName["Date"], obraName["Medium"], obraName["Dimensions"], obraName["CreditLine"],obraName["AccessionNumber"],obraName["Classification"],obraName["Department"], obraName["DateAcquired"],obraName["Cataloged"],obraName["URL"],obraName["Circumference (cm)"],obraName["Depth (cm)"],obraName["Diameter (cm)"])
+        lt.addLast(obras, obra)
 
 # Funciones para creacion de datos
 
@@ -105,12 +105,12 @@ def newArtista(name,gender,beginDate,nationality,endDate,id,artistbio,wiki,ulan)
     artista ['obra'] = lt.newList('ARRAY_LIST')
     return artista
 
-def newObra(objectID,title,constituentID, date,medium,dimensions,creditline,accessionnumber, classification, department, dateAcquired, cataloge, url, diameter, circunference, depth):
+def newObra(objectID,title,constituentID, date,medium,dimensions,creditline,accessionnumber, depth, classification, department, dateAcquired, cataloge, url, diameter, circumference):
     """
     Crea una nueva estructura para modelar los libros de
     un autor y su promedio de ratings
     """
-    obra = {"ObjectID": "",'Title': "", "ConstituentID": "", "Date" : "", "Medium" : "", "Dimensions" : "", "CreditLine" : "", "AccessionNumber" : "", "Classification" : "", "Department": "", "DateAcquired" : "", "Cataloge": "", "URL" : ""} 
+    obra = {"ObjectID": "",'Title': "", "ConstituentID": "", "Date" : "", "Medium" : "", "Dimensions" : "", "CreditLine" : "", "AccessionNumber" : "", "Depth": "", "Classification" : "", "Department": "", "DateAcquired" : "", "Cataloge": "", "URL" : "","Circumference": ""} 
     obra['Title'] = title
     obra['Date'] = date
     obra['ConstituentID'] = constituentID
@@ -121,7 +121,7 @@ def newObra(objectID,title,constituentID, date,medium,dimensions,creditline,acce
     obra['DateAcquired'] = dateAcquired
     obra['ObjectID'] = objectID
     obra['Diameter'] = diameter
-    obra['Circunference'] = circunference
+    obra['Circumference'] = circumference
     obra['Depth'] = depth 
     obra['AccessionNumber'] = accessionnumber
     obra['Classification'] = classification 
