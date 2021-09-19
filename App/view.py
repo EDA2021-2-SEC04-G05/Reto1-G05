@@ -100,13 +100,15 @@ while True:
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
-        opciones = int(input('De que forma desea cargar el catalogo:'))
+        opciones = int(input('De que forma desea cargar el catalogo: 1= linkedlist, culquier otro numero Arraylist'))
     
         catalog = initCatalog(opciones)
         loadData(catalog) 
 
         print('Artistas cargados: ' + str(lt.size(catalog['artistas'])))
         print('Obras Cargadas: ' + str(lt.size(catalog['obras'])))
+        print(str(controller.getUltimosTresArtistas(catalog)))
+        print(str(controller.getUltimosTresObra(catalog)))
 
     elif int(inputs[0]) == 2:
         number = input("ultimos 3 artistas: ")

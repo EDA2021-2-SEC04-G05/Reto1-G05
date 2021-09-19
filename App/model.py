@@ -25,6 +25,7 @@
  """
 
 
+from DISClib.DataStructures.arraylist import size
 import config as cf
 import time 
 from DISClib.ADT import list as lt
@@ -61,29 +62,52 @@ def newCatalog():
     return catalog
 
 # Funciones para agregar informacion al catalogo
+
+def cargarCatalogoArtistas(catalog, artistaName):
+    
+  
+    ltArtistas = catalog['artistas']
+    artistaNuevo = newArtista(artistaName["ConstituentID"],artistaName["DisplayName"], artistaName["ArtistBio"], artistaName["Nationality"], artistaName["Gender"],artistaName["BeginDate"], artistaName["EndDate"],artistaName["Wiki QID"],artistaName["ULAN"])
+    lt.addLast(ltArtistas, artistaNuevo)
+
+
+def cargarCatalogoObras(catalog, obraName):
+    
+  
+    ltObras = catalog['obras']
+    obraNuevo = newObra(obraName["ObjectID"],obraName["Title"],obraName["ConstituentID"],obraName["Date"], obraName["Medium"], obraName["Dimensions"], obraName["CreditLine"],obraName["AccessionNumber"],obraName["Classification"],obraName["Department"], obraName["DateAcquired"],obraName["Cataloged"],obraName["URL"],obraName["Circumference (cm)"],obraName["Depth (cm)"],obraName["Diameter (cm)"])
+    lt.addLast( ltObras, obraNuevo)    
+
+
 def addArtista(catalog, artistaName):
     """
     Adiciona un autor a lista de autores, la cual guarda referencias
     a los libros de dicho autor
     """
-    artistas = catalog['artistas']
-    posartista = lt.isPresent(artistas, artistaName)
+    ltArtistas = catalog['artistas']
+    artistaNuevo = newArtista(artistaName["ConstituentID"],artistaName["DisplayName"], artistaName["ArtistBio"], artistaName["Nationality"], artistaName["Gender"],artistaName["BeginDate"], artistaName["EndDate"],artistaName["Wiki QID"],artistaName["ULAN"])
+    print(artistaNuevo)
+    posartista = lt.isPresent(ltArtistas, artistaNuevo)
     if posartista > 0:
-        artista = lt.getElement(artistas, posartista)
+        artista = lt.getElement(ltArtistas, posartista)
+        return artista
     else:
-        artista = newArtista(artistaName["ConstituentID"],artistaName["DisplayName"], artistaName["ArtistBio"], artistaName["Nationality"], artistaName["Gender"],artistaName["BeginDate"], artistaName["EndDate"],artistaName["Wiki_QID"],artistaName["ULAN"])
-        lt.addLast(artistas, artista)
+        lt.addLast(ltArtistas, artistaNuevo)
+        return artistaNuevo
 
 
 def addObra(catalog, obraName):
     
-    obras = catalog['obras']
-    posobra = lt.isPresent(obras, obraName)
+    ltObras = catalog['obras']
+    obraNuevo = newObra(obraName["ObjectID"],obraName["Title"],obraName["ConstituentID"],obraName["Date"], obraName["Medium"], obraName["Dimensions"], obraName["CreditLine"],obraName["AccessionNumber"],obraName["Classification"],obraName["Department"], obraName["DateAcquired"],obraName["Cataloged"],obraName["URL"],obraName["Circumference (cm)"],obraName["Depth (cm)"],obraName["Diameter (cm)"])
+    print(obraNuevo)
+    posobra = lt.isPresent(ltObras, obraNuevo)
     if posobra > 0:
-        obra = lt.getElement(obras, posobra)
+        obra = lt.getElement(ltObras, posobra)
+        return obra
     else:
-        obra = newObra(obraName["ObjectID"],obraName["Title"],obraName["ConstituentID"],obraName["Date"], obraName["Medium"], obraName["Dimensions"], obraName["CreditLine"],obraName["AccessionNumber"],obraName["Classification"],obraName["Department"], obraName["DateAcquired"],obraName["Cataloged"],obraName["URL"],obraName["Circumference (cm)"],obraName["Depth (cm)"],obraName["Diameter (cm)"])
-        lt.addLast(obras, obra)
+        lt.addLast(ltObras, obraNuevo)
+        return obraNuevo
 
 # Funciones para creacion de datos
 
@@ -92,7 +116,7 @@ def newArtista(name,gender,beginDate,nationality,endDate,id,artistbio,wiki,ulan)
     Crea una nueva estructura para modelar los libros de
     un autor y su promedio de ratings
     """
-    artista = {'ConstituentID': "", 'DisplayName': "", "ArtistBio": "" , "Nationality": "", "Gender": "","BeginDate": ""  , "EndDate" : "", "Wiki_QID": "", "ULAN": "" }
+    artista = {'ConstituentID': "", 'DisplayName': "", "ArtistBio": "" , "Nationality": "", "Gender": "","BeginDate": ""  , "EndDate" : "", "Wiki QID": "", "ULAN": "" }
     artista['DisplayName'] = name
     artista['Gender'] = gender
     artista['BeginDate'] = beginDate
@@ -100,7 +124,7 @@ def newArtista(name,gender,beginDate,nationality,endDate,id,artistbio,wiki,ulan)
     artista['EndDate'] = endDate
     artista['ConstituentID'] = id
     artista['ArtistBio'] = artistbio
-    artista['Wiki_QID'] = wiki 
+    artista['WikiQID'] = wiki 
     artista['ULAN'] = ulan 
     artista ['obra'] = lt.newList('ARRAY_LIST')
     return artista
@@ -151,12 +175,18 @@ def getUltimosTresArtistas(catalog):
     """
     artista = catalog['artistas']
     ultimostres = lt.newList()
-    i=sizesArtistas
-    for cont in reversed(range(sizesArtistas)):
-        i-=1
-        artista = lt.getElement(artista, cont)
-        lt.addFirst(ultimostres, artista)
+    i=0
+    size=sizesArtistas
+    condinal=3
+    while i<lt.size(artista) and condinal>0: 
+
+        artistaEncontrado = lt.getElement(artista,size)
+        lt.addFirst(ultimostres, artistaEncontrado)
+        size-=1
+        condinal-=1
     return ultimostres
+
+    
 
 
 def getUltimosTresObra(catalog):
@@ -201,6 +231,11 @@ def compareartistas(artistaname1, artista):
     if (artistaname1.lower() in artista['name'].lower()):
         return 0
     return -1
+
+def compareObras(obra1, obra):
+    if (obra1.lower() in obra['Title'].lower()):
+        return 0
+    return -1   
 
 def cmpArtworkByDateAcquired(artwork1,artwork2):
     """
