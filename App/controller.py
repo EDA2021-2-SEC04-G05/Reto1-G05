@@ -46,6 +46,7 @@ def loadData(catalog):
     loadArtworks(catalog)
     loadArtists(catalog)
     
+    
 
 def loadArtists(catalog):
     """
@@ -69,16 +70,16 @@ def loadArtworks(catalog):
 
 # Funciones de consulta sobre el catálogo
 
+def getUltimosPrimerosTresArtistas(catalog,fechaInicio,fechaFin):
+
+    ultimastres= model.getUltimosPrimerosTresArtistas(catalog,fechaInicio,fechaFin)
+    return ultimastres
+
 def getUltimosTresObra(catalog):
 
     ultimastres= model.getUltimosTresObra(catalog)
     return ultimastres
 
-
-def getUltimosTresArtistas(catalog):
-
-    ultimastres= model.getUltimosTresArtistas(catalog)
-    return ultimastres
 
 def getTamañoSubLista(catalog,valor):
     tamaño = model.tamañoMuestra(catalog, valor)

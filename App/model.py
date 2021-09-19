@@ -79,6 +79,14 @@ def cargarCatalogoObras(catalog, obraName):
     lt.addLast( ltObras, obraNuevo)    
 
 
+def relacionArtistaObra(catalog,catalog2):
+
+    if catalog['artistas']['ConstituentID']==catalog2['obras']['ConstituentID']:
+        return True
+
+
+
+
 def addArtista(catalog, artistaName):
     """
     Adiciona un autor a lista de autores, la cual guarda referencias
@@ -169,26 +177,6 @@ def sizesObras(catalog):
     return lt.size(catalog['obras'])
 
 
-def getUltimosTresArtistas(catalog):
-    """
-    Retorna los mejores libros
-    """
-    artista = catalog['artistas']
-    ultimostres = lt.newList()
-    i=0
-    size=sizesArtistas
-    condinal=3
-    while i<lt.size(artista) and condinal>0: 
-
-        artistaEncontrado = lt.getElement(artista,size)
-        lt.addFirst(ultimostres, artistaEncontrado)
-        size-=1
-        condinal-=1
-    return ultimostres
-
-    
-
-
 def getUltimosTresObra(catalog):
     """
     Retorna los mejores libros
@@ -248,6 +236,13 @@ def cmpArtworkByDateAcquired(artwork1,artwork2):
     if artwork1['DateAcquired'] < artwork2['DateAcquired']:
         respuesta = True 
     return respuesta
+
+def cmpArtistasPorAño(artista1, artista2):
+    rta=False
+    if artista1['BeginDate']<artista2['BeginDate']:
+        rta =True
+    return rta
+
 
 # Funciones de ordenamiento
 
@@ -366,3 +361,73 @@ def sortObras(catalog,opcion):
     stop_time = time.process_time()
     elapsed_time_mseg = (stop_time - start_time)*1000
     return elapsed_time_mseg,sorted_list
+
+def mergeSort(lst, cmpfunction):
+    size = lt.size(lst)
+    if size > 1:
+        mid = (size // 2)
+        """se divide la lista original, en dos partes, izquierda y derecha,
+        desde el punto mid."""
+        leftlist = lt.subList(lst, 1, mid)
+        rightlist = lt.subList(lst, mid+1, size - mid)
+
+        """se hace el llamado recursivo con la lista izquierda y derecha"""
+        mergeSort(leftlist, cmpfunction)
+        mergeSort(rightlist, cmpfunction)
+
+        """i recorre la lista izquierda, j la derecha y k la lista original"""
+        i = j = k = 1
+
+        leftelements = lt.size(leftlist)
+        rightelements = lt.size(rightlist)
+
+        while (i <= leftelements) and (j <= rightelements):
+            elemi = lt.getElement(leftlist, i)
+            elemj = lt.getElement(rightlist, j)
+            """compara y ordena los elementos"""
+            if cmpfunction(elemj, elemi):   # caso estricto elemj < elemi
+                lt.changeInfo(lst, k, elemj)
+                j += 1
+            else:                            # caso elemi <= elemj
+                lt.changeInfo(lst, k, elemi)
+                i += 1
+            k += 1
+
+        """Agrega los elementos que no se comprararon y estan ordenados"""
+        while i <= leftelements:
+            lt.changeInfo(lst, k, lt.getElement(leftlist, i))
+            i += 1
+            k += 1
+
+        while j <= rightelements:
+            lt.changeInfo(lst, k, lt.getElement(rightlist, j))
+            j += 1
+            k += 1
+    return lst
+
+
+def getUltimosPrimerosTresArtistas(catalog,fechaInicio,fechaFin):
+    """
+    """
+    artista = catalog['artistas']
+    listaOrdenada = mergeSort(artista,cmpArtistasPorAño)
+    i=0
+    posicioninicial= None
+    posicionfinal= None
+    while i < lt.size(listaOrdenada):
+
+        artista1 = lt.getElement(listaOrdenada,i)
+
+        if artista1['BeginDate'] == fechaInicio and posicioninicial == None:
+            posicioninicial = i 
+
+        if artista1['BeginDate'] == fechaFin:
+            posicionfinal = i
+    i=+1
+    
+    listainicial=lt.subList(listaOrdenada,posicioninicial,(posicionfinal-posicioninicial))
+
+    sublistaprimero3=lt.subList(listainicial,0,3)
+    sublistaultimos3=lt.subList(listainicial,(lt.size(listainicial)-3),lt.size(listainicial))
+
+    return (sublistaprimero3,sublistaultimos3)

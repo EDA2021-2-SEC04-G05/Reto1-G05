@@ -62,12 +62,14 @@ def loadData(catalog):
     """
     controller.loadData(catalog)
 
-def printUltimosTresArtistas(artista):
-    size = lt.size(artista)
-    if size:
-        print(' Estos son los ultimos tres artistas: ')
-        for artistas in lt.iterator(artista):
+def printUltimosTresArtistas(sublista1,sublista2):
+    size1 = lt.size(sublista1)
+    size2 = lt.size(sublista2)
+    if size1 :
+       
+        for artistas in lt.iterator(sublista1):
             print('Nombre: ' + artista['DisplayName'])
+            
     else:
         print('No se encontraron los artistas')    
 
@@ -107,12 +109,11 @@ while True:
 
         print('Artistas cargados: ' + str(lt.size(catalog['artistas'])))
         print('Obras Cargadas: ' + str(lt.size(catalog['obras'])))
-        print(str(controller.getUltimosTresArtistas(catalog)))
-        print(str(controller.getUltimosTresObra(catalog)))
 
     elif int(inputs[0]) == 2:
-        number = input("ultimos 3 artistas: ")
-        artistas = controller.getUltimosTresArtistas(catalog)
+        fechaInicio = input("fecha de nacimiento: ")
+        fechaFin = input("fecha de Fallecimiento: ")
+        artistas = controller.getUltimosPrimerosTresArtistas(catalog,fechaInicio,fechaFin)
         printUltimosTresArtistas(artistas)
 
     elif int(inputs[0]) == 3:
