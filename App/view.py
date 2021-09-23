@@ -23,6 +23,7 @@
 
 
 
+
 import config as cf
 import sys
 import controller
@@ -98,7 +99,31 @@ def printUltimosTresObras(obralt):
     else:
         print('No se encontraron las obras')            
 
-   
+def printTecnica(sublista1,sublista2):
+    size1=lt.size(sublista1)
+    if size1:
+        j=0
+        while j < size1:
+            medio=lt.getElement(sublista1,j)
+            print(size1)
+            print( "mediumName:" +medio['nombreTecnic'],"contador"+ medio['contador'])
+
+
+
+    size2 = lt.size(sublista2)
+    if size2:     
+     i=0
+     while i < size2:
+         artista= lt.getElement(sublista1,i)
+         print(size2)
+         print('ConstituentID:'+ artista['ConstituentID'],'Nombre: ' + artista['DisplayName'],'BeginDate:'+ artista['BeginDate'],'Nationality:'+ artista ['Nationality'],'Gender:'+ artista['Gender'],'ArtistBio:'+ artista['ArtistBio'],'Wiki QID:'+ artista['Wiki QID'],'ULAN:'+artista['ULAN'])
+         i+=1  
+           
+    else:
+        print('No se encontraron los artistas')    
+
+def prinobjeto(artista):  
+     print(artista)
 
 def printSortResults(sort_obra, sample=10):
     size= lt.size(sort_obra)
@@ -142,9 +167,10 @@ while True:
         printUltimosTresObras(obras) 
 
     elif int(inputs[0]) == 4:
-        number = input("obras por tecnica de artista: ")
-        artistas = controller.getUltimosTresObra(catalog)
-        printUltimosTresObras(obras) 
+        nombre = input("Nombre del artista: ")
+        artistastecnica = controller.getTecnicaArtista(catalog,nombre)
+        #printTecnica(artistastecnica) 
+        prinobjeto(artistastecnica)
 
     elif int(inputs[0]) == 5:
         number = input("obra por nacionalidad artista: ")

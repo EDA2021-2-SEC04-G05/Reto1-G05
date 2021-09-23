@@ -45,6 +45,8 @@ def loadData(catalog):
     """
     loadArtworks(catalog)
     loadArtists(catalog)
+   
+
     
     
 
@@ -56,6 +58,7 @@ def loadArtists(catalog):
     input_file = csv.DictReader(open(artistsfile,encoding= 'utf-8'))
     for artists in input_file:
         model.cargarCatalogoArtistas(catalog,artists)
+  
 
 def loadArtworks(catalog):
     """
@@ -65,6 +68,8 @@ def loadArtworks(catalog):
     input_file = csv.DictReader(open(artworksfile,encoding= 'utf-8'))
     for artworks in input_file:
         model.cargarCatalogoObras(catalog,artworks)
+
+
 
 # Funciones de ordenamiento
 
@@ -81,9 +86,9 @@ def getUltimosTresObra(catalog,number1,number2):
     return ultimastres
 
 
-def getTamañoSubLista(catalog,valor):
-    tamaño = model.tamañoMuestra(catalog, valor)
-    return tamaño 
+def getTecnicaArtista(catalog,artista):
+    tecniaArtista=model.getTecnicaArtista(catalog,artista)
+    return tecniaArtista
 
 
     

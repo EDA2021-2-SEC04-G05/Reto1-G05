@@ -78,30 +78,6 @@ def cargarCatalogoObras(catalog, obraName):
     obraNuevo = newObra(obraName["ObjectID"],obraName["Title"],obraName["ConstituentID"],obraName["Date"], obraName["Medium"], obraName["Dimensions"], obraName["CreditLine"],obraName["AccessionNumber"],obraName["Classification"],obraName["Department"], obraName["DateAcquired"],obraName["Cataloged"],obraName["URL"],obraName["Circumference (cm)"],obraName["Depth (cm)"],obraName["Diameter (cm)"])
     lt.addLast( ltObras, obraNuevo)    
 
-
-def relacionArtistaObra(catalog,catalog2):
-      
- artistas= catalog['artistas']
- obras=catalog2['obras']
-
- artistas = sortConstituentID(artistas)
- obras=sortConstituentID(obras)
- i =0 
-
- while i <lt.size(artistas):
-     j=0
-     artista= lt.getElement(artistas,i)
-
-     while j< lt.size(obras):
-         obra=lt.getElement(obras,j)
-
-         if artista['ConstituentID'] == obra['ConstituentID']:
-             lt.addLast(artista['obra'],obra)
-             lt.addLast(obra['artista'],artista)
-         j=+1
-     i=+1
-    
-
 def addArtista(catalog, artistaName):
     """
     Adiciona un autor a lista de autores, la cual guarda referencias
@@ -139,7 +115,7 @@ def newArtista(id,name,artistbio,nationality,gender,beginDate,endDate,wiki,ulan)
     Crea una nueva estructura para modelar los libros de
     un autor y su promedio de ratings
     """
-    artista = {'ConstituentID': "", 'DisplayName': "", "ArtistBio": "" , "Nationality": "", "Gender": "","BeginDate": ""  , "EndDate" : "", "Wiki QID": "", "ULAN": "" }
+    artista = {"ConstituentID": "", "DisplayName": "", "ArtistBio": "" , "Nationality": "", "Gender": "","BeginDate": ""  , "EndDate" : "", "Wiki QID": "", "ULAN": "" }
     artista['ConstituentID'] = id
     artista['DisplayName'] = name
     artista['ArtistBio'] = artistbio
@@ -149,7 +125,6 @@ def newArtista(id,name,artistbio,nationality,gender,beginDate,endDate,wiki,ulan)
     artista['EndDate'] = endDate
     artista['WikiQID'] = wiki 
     artista['ULAN'] = ulan 
-    artista ['obra'] = lt.newList('ARRAY_LIST')
     return artista
 
 def newObra(objectID,title,constituentID, date,medium,dimensions,creditline,accessionnumber, classification, department, dateAcquired, cataloge, url, circumference, depth, diameter):
@@ -174,7 +149,6 @@ def newObra(objectID,title,constituentID, date,medium,dimensions,creditline,acce
     obra['Circumference (cm)'] = circumference
     obra['Depth (cm)'] = depth
     obra['Diameter (cm)'] = diameter 
-    obra['artista'] = lt.newList('ARRAY_LIST')
     return obra   
  
 
@@ -217,12 +191,17 @@ def subListObras(catalog, pos):
   
 # Funciones utilizadas para comparar elementos dentro de una lista
 def compareartistas(artistaname1, artista):
-    if (artistaname1.lower() in artista['name'].lower()):
+    if (artistaname1.lower() in artista['DisplayName'].lower()):
         return 0
     return -1
 
 def compareObras(obra1, obra):
     if (obra1.lower() in obra['Title'].lower()):
+        return 0
+    return -1   
+
+def compareTecnica(obra1, obra):
+    if (obra1['Medium'].lower() in obra['Medium'].lower()):
         return 0
     return -1   
 
@@ -428,7 +407,6 @@ def sortConstituentID(lst):
         pos1 += 1
     return lst
 
-
 def getUltimosPrimerosTresArtistas(catalog,fechaInicio,fechaFin):
     """
     """
@@ -514,5 +492,66 @@ def getUltimosTresObras(catalog,fechaInicio,fechaFin):
     subLista2=lt.subList(subLista1,0,posicionfinal)
 
     return (subLista2)
+
+
+
+def getTecnicaArtista(catalog,artista):
+    
+    artistas= catalog['artistas']
+    listaOrdenada=mergeSort(artistas,cmpConstitudID)
+    sizelt=lt.size(listaOrdenada)
+   
+    artistaEncontrado= None
+    found = False
+    posicion = 0
+
+    while  posicion < sizelt and not found:
+        artista1=lt.getElement(listaOrdenada,posicion)
+
+        if compareartistas(artista,artista1)!=0:
+            posicion =  posicion + 1
+        elif compareartistas(artista,artista1)==0:
+            artistaEncontrado= artista1
+            found = True
+        
+    obras= catalog['obras']
+    listaOrdenadaObras=mergeSort(obras,cmpConstitudID)
+    sizeobraslt=lt.size(listaOrdenada)
+    i=0
+    
+    listasObrasArtista=lt.newList('ARRAY_LIST',None,None,None,None)
+    while i<sizeobraslt:
+        obra1=lt.getElement(listaOrdenadaObras,i)
+        if cmpConstitudID(obra1,artistaEncontrado)==True:
+            lt.addLast(listasObrasArtista)
+        i=i+1
+            
+    sizeObrasArtistas=lt.size(listasObrasArtista)  
+    j=0
+
+    listaTecnicas=lt.newList('ARRAY_LIST',None,None,None,None)
+    def newTecnica(Ptecnica):
+      tecnica={"nombreTecnica":"","contador":""}
+      tecnica['nombreTecnica']=Ptecnica
+      tecnica['contador'] = 1
+   
+
+    while j<sizeObrasArtistas:
+        elemento1=lt.getElement(listasObrasArtista,j)
+        medioObra=elemento1['Medium']
+
+        if lt.isEmpty(listaTecnicas):
+            lt.addLast(listaTecnicas,newTecnica(medioObra))
+        elif lt.size(listaTecnicas)>0:
+            r=0
+            while r<lt.size(listaTecnicas):
+                tenicas=lt.getElement(listaTecnicas,r)
+                if compareTecnica(tenicas,medioObra)==0:
+                    tenicas['contador']+=1
+            r+=1        
+
+    return(listaTecnicas,listasObrasArtista) 
+
+
 
 
