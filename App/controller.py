@@ -75,9 +75,9 @@ def getUltimosPrimerosTresArtistas(catalog,fechaInicio,fechaFin):
     ultimastres= model.getUltimosPrimerosTresArtistas(catalog,fechaInicio,fechaFin)
     return ultimastres
 
-def getUltimosTresObra(catalog):
+def getUltimosTresObra(catalog,number1,number2):
 
-    ultimastres= model.getUltimosTresObra(catalog)
+    ultimastres= model.getUltimosTresObras(catalog,number1,number2)
     return ultimastres
 
 
@@ -85,7 +85,5 @@ def getTamañoSubLista(catalog,valor):
     tamaño = model.tamañoMuestra(catalog, valor)
     return tamaño 
 
-def getSorter(catalog,sort):
-   ordenamiento = model.tipoSorter(catalog,sort)
-   return ordenamiento
+
     

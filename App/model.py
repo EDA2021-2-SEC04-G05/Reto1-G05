@@ -152,28 +152,28 @@ def newArtista(id,name,artistbio,nationality,gender,beginDate,endDate,wiki,ulan)
     artista ['obra'] = lt.newList('ARRAY_LIST')
     return artista
 
-def newObra(objectID,title,constituentID, date,medium,dimensions,creditline,accessionnumber, depth, classification, department, dateAcquired, cataloge, url, diameter, circumference):
+def newObra(objectID,title,constituentID, date,medium,dimensions,creditline,accessionnumber, classification, department, dateAcquired, cataloge, url, circumference, depth, diameter):
     """
     Crea una nueva estructura para modelar los libros de
     un autor y su promedio de ratings
     """
-    obra = {"ObjectID": "",'Title': "", "ConstituentID": "", "Date" : "", "Medium" : "", "Dimensions" : "", "CreditLine" : "", "AccessionNumber" : "", "Depth": "", "Classification" : "", "Department": "", "DateAcquired" : "", "Cataloge": "", "URL" : "","Circumference": ""} 
+    obra = {"ObjectID": "",'Title': "", "ConstituentID": "", "Date" : "", "Medium" : "", "Dimensions" : "", "CreditLine" : "", "AccessionNumber" : "", "Classification" : "","Department":"", "DateAcquired" : "", "Cataloged": "", "URL" : "","Circumference (cm)": "", "Depth (cm)": "", "Diameter (cm)": ""} 
+    obra['ObjectID'] = objectID
     obra['Title'] = title
-    obra['Date'] = date
     obra['ConstituentID'] = constituentID
+    obra['Date'] = date
     obra['Medium'] = medium
     obra['Dimensions'] = dimensions
     obra['CreditLine'] = creditline
-    obra['Department'] = department
-    obra['DateAcquired'] = dateAcquired
-    obra['ObjectID'] = objectID
-    obra['Diameter'] = diameter
-    obra['Circumference'] = circumference
-    obra['Depth'] = depth 
     obra['AccessionNumber'] = accessionnumber
     obra['Classification'] = classification 
-    obra['Cataloge'] = cataloge
+    obra['Department'] = department
+    obra['DateAcquired'] = dateAcquired
+    obra['Cataloged'] = cataloge
     obra['URL'] = url 
+    obra['Circumference (cm)'] = circumference
+    obra['Depth (cm)'] = depth
+    obra['Diameter (cm)'] = diameter 
     obra['artista'] = lt.newList('ARRAY_LIST')
     return obra   
  
@@ -191,22 +191,8 @@ def sizesObras(catalog):
     """
     return lt.size(catalog['obras'])
 
-
-def getUltimosTresObra(catalog):
-    """
-    Retorna los mejores libros
-    """
-    obra = catalog['artistas']
-    ultimostres = lt.newList()
-    i=sizesArtistas
-    for cont in reversed(range(sizesObras)):
-        i-=1
-        obra = lt.getElement(obra, cont)
-        lt.addFirst(ultimostres, obra)
-    return ultimostres
-
 def tamañoMuestra(catalog,valor):
-    tamaño = lt.size(catalog['obra'])
+    tamaño = lt.size(catalog['obras'])
     if valor > tamaño:
         print('Error')
     else:
@@ -265,9 +251,6 @@ def cmpConstitudID(objeto1, objeto2):
      rta=True
     return rta
     
-
-
-
 # Funciones de ordenamiento
 
 
@@ -278,6 +261,8 @@ def tipoSorter(opciones,lst):
         return shellsort(lst)
     elif opciones == 2:
         return quicksort(lst)
+    elif opciones == 3:
+        return mergeSort(lst,cmpArtworkByDateAcquired)  
     else:
         print ("error")
 
@@ -486,3 +471,48 @@ def getUltimosPrimerosTresArtistas(catalog,fechaInicio,fechaFin):
 
     subLista2=lt.subList(subLista1,0,posicionfinal)
     return (subLista2)
+
+
+def getUltimosTresObras(catalog,fechaInicio,fechaFin):
+    obras= catalog['obras']
+    listaOrdenada=mergeSort(obras,cmpArtworkByDateAcquired)
+    sizelt=lt.size(listaOrdenada)
+    
+    posicioninicial= 0
+   
+    found = False
+    posicion = 0
+
+    while  posicion < sizelt and not found:
+        obra1=lt.getElement(listaOrdenada,posicion)
+        
+        if obra1['DateAcquired']<fechaInicio:
+            posicion =  posicion + 1
+
+        elif obra1['DateAcquired']>=fechaInicio:
+            found = True
+            posicioninicial=posicion
+            
+    subLista1= lt.subList(listaOrdenada,posicioninicial,(sizelt-posicioninicial))
+
+    posicionfinal = 0
+    found2 = False
+    posicion2 = 0
+    sizelt2=lt.size(subLista1)
+
+    while  posicion2 < sizelt2 and not found2:
+        artista2=lt.getElement(subLista1,posicion2)
+        
+        if artista2['DateAcquired']<=fechaFin:
+            posicion2 =  posicion2 + 1
+            posicionfinal=posicion2+1
+
+        if artista2['DateAcquired']>fechaFin:
+         found2 = True
+         
+
+    subLista2=lt.subList(subLista1,0,posicionfinal)
+
+    return (subLista2)
+
+

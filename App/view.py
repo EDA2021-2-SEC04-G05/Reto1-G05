@@ -76,20 +76,29 @@ def printPrimeroUltimosTresArtistas(sublista1):
      i=0
      while i < size1:
          artista= lt.getElement(sublista1,i)
+         print(size1)
          print('ConstituentID:'+ artista['ConstituentID'],'Nombre: ' + artista['DisplayName'],'BeginDate:'+ artista['BeginDate'],'Nationality:'+ artista ['Nationality'],'Gender:'+ artista['Gender'],'ArtistBio:'+ artista['ArtistBio'],'Wiki QID:'+ artista['Wiki QID'],'ULAN:'+artista['ULAN'])
          i+=1  
            
     else:
         print('No se encontraron los artistas')    
 
-def printUltimosTresObras(obra):
-    size = lt.size(obra)
-    if size:
-        print(' Estos son los ultimos tres obra: ')
-        for obras in lt.iterator(obra):
-            print('Nombre: ' + obra['DisplayName'])
+def printUltimosTresObras(obralt):
+    size1 = lt.size(obralt)
+    i=0
+    if size1:     
+     i=0
+     while i < size1:
+         obra= lt.getElement(obralt,i)
+         print(size1)
+         print("ObjectID" + obra['ObjectID'],"Title" + obra['Title'],"ConstituentID" + obra['ConstituentID'],"Date"+ obra['Date'], "Medium"+ obra['Medium'],"Dimensions" + obra['Dimensions'],"CreditLine" + obra['CreditLine'],"AccessionNumber" +obra['AccessionNumber'], "Classification" + obra['Classification'],"Department" + obra['Department'],"DateAcquired" +obra['DateAcquired'],"Cataloged" +obra['Cataloged'],"URL" +obra['URL'],"Circumference (cm)" +obra['Circumference (cm)'],"Depth (cm)" + obra['Depth (cm)'],"Diameter (cm)"+obra['Diameter (cm)'])
+
+         i+=1  
+           
     else:
-        print('No se encontraron libros')      
+        print('No se encontraron las obras')            
+
+   
 
 def printSortResults(sort_obra, sample=10):
     size= lt.size(sort_obra)
@@ -123,16 +132,13 @@ while True:
         fechaInicio = input("fecha de inicio:  ")
         fechaFin = input("fecha de fin:  ")
         artistas = controller.getUltimosPrimerosTresArtistas(catalog,fechaInicio,fechaFin)
-        #printdato(artistas)
+  
         printPrimeroUltimosTresArtistas(artistas)
 
     elif int(inputs[0]) == 3:
-        valor = int(input('Ingrese el tamaño de la lista que quiere crear: '))
-        number = input("ultimos 3 obras: ")
-        sort=input("selecciones el ordenanimento que quiere: 0= Insercionsort, 1= shellsort, 2= quicksort")
-        ordenamiento=controller.getSorter(catalog,sort)
-        obras = controller.getUltimosTresObra(catalog)
-        tamaño = controller.getTamañoSubLista(catalog,valor)
+        number1 = input("el formato de la fecha es (AAAA-MM-DD). fecha inicial:  ")
+        number2=input("el formato de la fecha es (AAAA-MM-DD). fecha final:  ")
+        obras = controller.getUltimosTresObra(catalog,number1,number2)
         printUltimosTresObras(obras) 
 
     elif int(inputs[0]) == 4:
