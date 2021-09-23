@@ -25,7 +25,7 @@
  """
 
 
-from DISClib.DataStructures.arraylist import size
+from DISClib.DataStructures.arraylist import size, subList
 import config as cf
 import time 
 from DISClib.ADT import list as lt
@@ -80,12 +80,27 @@ def cargarCatalogoObras(catalog, obraName):
 
 
 def relacionArtistaObra(catalog,catalog2):
+      
+ artistas= catalog['artistas']
+ obras=catalog2['obras']
 
-    if catalog['artistas']['ConstituentID']==catalog2['obras']['ConstituentID']:
-        return True
+ artistas = sortConstituentID(artistas)
+ obras=sortConstituentID(obras)
+ i =0 
 
+ while i <lt.size(artistas):
+     j=0
+     artista= lt.getElement(artistas,i)
 
+     while j< lt.size(obras):
+         obra=lt.getElement(obras,j)
 
+         if artista['ConstituentID'] == obra['ConstituentID']:
+             lt.addLast(artista['obra'],obra)
+             lt.addLast(obra['artista'],artista)
+         j=+1
+     i=+1
+    
 
 def addArtista(catalog, artistaName):
     """
@@ -119,19 +134,19 @@ def addObra(catalog, obraName):
 
 # Funciones para creacion de datos
 
-def newArtista(name,gender,beginDate,nationality,endDate,id,artistbio,wiki,ulan):
+def newArtista(id,name,artistbio,nationality,gender,beginDate,endDate,wiki,ulan):
     """
     Crea una nueva estructura para modelar los libros de
     un autor y su promedio de ratings
     """
     artista = {'ConstituentID': "", 'DisplayName': "", "ArtistBio": "" , "Nationality": "", "Gender": "","BeginDate": ""  , "EndDate" : "", "Wiki QID": "", "ULAN": "" }
+    artista['ConstituentID'] = id
     artista['DisplayName'] = name
+    artista['ArtistBio'] = artistbio
+    artista['Nationality'] = nationality
     artista['Gender'] = gender
     artista['BeginDate'] = beginDate
-    artista['Nationality'] = nationality
     artista['EndDate'] = endDate
-    artista['ConstituentID'] = id
-    artista['ArtistBio'] = artistbio
     artista['WikiQID'] = wiki 
     artista['ULAN'] = ulan 
     artista ['obra'] = lt.newList('ARRAY_LIST')
@@ -242,6 +257,15 @@ def cmpArtistasPorAño(artista1, artista2):
     if artista1['BeginDate']<artista2['BeginDate']:
         rta =True
     return rta
+
+def cmpConstitudID(objeto1, objeto2):
+ 
+    rta= False
+    if objeto1['ConstituentID']<objeto2['ConstituentID']:
+     rta=True
+    return rta
+    
+
 
 
 # Funciones de ordenamiento
@@ -406,28 +430,59 @@ def mergeSort(lst, cmpfunction):
     return lst
 
 
+    
+def sortConstituentID(lst):
+    size = lt.size(lst)
+    pos1 = 1
+    while pos1 <= size:
+        pos2 = pos1
+        while (pos2 > 1) and (cmpConstitudID(
+               lt.getElement(lst, pos2), lt.getElement(lst, pos2-1))):
+            lt.exchange(lst, pos2, pos2-1)
+            pos2 -= 1
+        pos1 += 1
+    return lst
+
+
 def getUltimosPrimerosTresArtistas(catalog,fechaInicio,fechaFin):
     """
     """
     artista = catalog['artistas']
     listaOrdenada = mergeSort(artista,cmpArtistasPorAño)
-    i=0
-    posicioninicial= None
-    posicionfinal= None
-    while i < lt.size(listaOrdenada):
+    sizelt=lt.size(listaOrdenada)
 
-        artista1 = lt.getElement(listaOrdenada,i)
+    posicioninicial= 0
+   
+    found = False
+    posicion = 0
 
-        if artista1['BeginDate'] == fechaInicio and posicioninicial == None:
-            posicioninicial = i 
+    while  posicion < sizelt and not found:
+        artista1=lt.getElement(listaOrdenada,posicion)
+        
+        if artista1['BeginDate']<fechaInicio:
+            posicion =  posicion + 1
 
-        if artista1['BeginDate'] == fechaFin:
-            posicionfinal = i
-    i=+1
-    
-    listainicial=lt.subList(listaOrdenada,posicioninicial,(posicionfinal-posicioninicial))
+        elif artista1['BeginDate']>=fechaInicio:
+            found = True
+            posicioninicial=posicion
+            
+    subLista1= lt.subList(listaOrdenada,posicioninicial,(sizelt-posicioninicial))
 
-    sublistaprimero3=lt.subList(listainicial,0,3)
-    sublistaultimos3=lt.subList(listainicial,(lt.size(listainicial)-3),lt.size(listainicial))
+    posicionfinal = 0
+    found2 = False
+    posicion2 = 0
+    sizelt2=lt.size(subLista1)
 
-    return (sublistaprimero3,sublistaultimos3)
+    while  posicion2 < sizelt2 and not found2:
+        artista2=lt.getElement(subLista1,posicion2)
+        
+        if artista2['BeginDate']<=fechaFin:
+            posicion2 =  posicion2 + 1
+            posicionfinal=posicion2+1
+
+        if artista2['BeginDate']>fechaFin:
+         found2 = True
+         
+
+    subLista2=lt.subList(subLista1,0,posicionfinal)
+    return (subLista2)

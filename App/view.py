@@ -21,6 +21,8 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+
+
 import config as cf
 import sys
 import controller
@@ -62,14 +64,21 @@ def loadData(catalog):
     """
     controller.loadData(catalog)
 
-def printUltimosTresArtistas(sublista1,sublista2):
+
+
+def printdato(dato):
+     print(dato)
+
+def printPrimeroUltimosTresArtistas(sublista1):
     size1 = lt.size(sublista1)
-    size2 = lt.size(sublista2)
-    if size1 :
-       
-        for artistas in lt.iterator(sublista1):
-            print('Nombre: ' + artista['DisplayName'])
-            
+    i=0
+    if size1:     
+     i=0
+     while i < size1:
+         artista= lt.getElement(sublista1,i)
+         print('ConstituentID:'+ artista['ConstituentID'],'Nombre: ' + artista['DisplayName'],'BeginDate:'+ artista['BeginDate'],'Nationality:'+ artista ['Nationality'],'Gender:'+ artista['Gender'],'ArtistBio:'+ artista['ArtistBio'],'Wiki QID:'+ artista['Wiki QID'],'ULAN:'+artista['ULAN'])
+         i+=1  
+           
     else:
         print('No se encontraron los artistas')    
 
@@ -102,7 +111,7 @@ while True:
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
-        opciones = int(input('De que forma desea cargar el catalogo: 1= linkedlist, culquier otro numero Arraylist'))
+        opciones = int(input('De que forma desea cargar el catalogo: 1= linkedlist, culquier otro numero Arraylist: '))
     
         catalog = initCatalog(opciones)
         loadData(catalog) 
@@ -111,13 +120,14 @@ while True:
         print('Obras Cargadas: ' + str(lt.size(catalog['obras'])))
 
     elif int(inputs[0]) == 2:
-        fechaInicio = input("fecha de nacimiento: ")
-        fechaFin = input("fecha de Fallecimiento: ")
+        fechaInicio = input("fecha de inicio:  ")
+        fechaFin = input("fecha de fin:  ")
         artistas = controller.getUltimosPrimerosTresArtistas(catalog,fechaInicio,fechaFin)
-        printUltimosTresArtistas(artistas)
+        #printdato(artistas)
+        printPrimeroUltimosTresArtistas(artistas)
 
     elif int(inputs[0]) == 3:
-        valor = int(input('Ingrese el tamaño de la lista que quiere crear:'))
+        valor = int(input('Ingrese el tamaño de la lista que quiere crear: '))
         number = input("ultimos 3 obras: ")
         sort=input("selecciones el ordenanimento que quiere: 0= Insercionsort, 1= shellsort, 2= quicksort")
         ordenamiento=controller.getSorter(catalog,sort)
@@ -138,12 +148,12 @@ while True:
     elif int(inputs[0]) == 6:
         number = input("costo transportar obras: ")
         artistas = controller.getUltimosTresArtistas(catalog)
-        printUltimosTresArtistas(artistas)
+      
 
     elif int(inputs[0]) == 7:
         number = input("nueva exposicion: ")
         artistas = controller.getUltimosTresArtistas(catalog)
-        printUltimosTresArtistas(artistas)
+        
 
 
     else:
